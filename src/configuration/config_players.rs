@@ -1,29 +1,32 @@
-use crate::FitzError;
+use crate::{FitzError, PlayerType};
 
 #[derive(Debug, PartialEq)]
 pub struct ConfigPlayers {
-    pub p1type: char,
-    pub p2type: char,
+    pub p1type: PlayerType,
+    pub p2type: PlayerType,
 }
 
 impl ConfigPlayers {
-    pub fn build(p1: &String, p2: &String) -> Result<ConfigPlayers, FitzError> {
-        let config_players: ConfigPlayers = ConfigPlayers {
-            p1type: p1.chars().next().unwrap(),
-            p2type: p2.chars().next().unwrap(),
+    pub fn build(p1: &str, p2: &str) -> Result<ConfigPlayers, FitzError> {
+        let invalid_player = FitzError {
+            code: 4,
+            message: "Invalid player type".to_string(),
         };
 
-        // Ensure p1type and p2type are valid characters
-        let valid_pxtypes = ['1', '2', 'h'];
-        if !valid_pxtypes.contains(&config_players.p1type)
-            || !valid_pxtypes.contains(&config_players.p2type)
-        {
-            return Err(FitzError {
-                code: 4,
-                message: "Invalid player type".to_string(),
-            });
-        }
+        let p1type = match p1 {
+            "1" => PlayerType::Computer1,
+            "2" => PlayerType::Computer1,
+            "h" => PlayerType::Human,
+            _ => return Err(invalid_player),
+        };
 
-        return Ok(config_players);
+        let p2type = match p2 {
+            "1" => PlayerType::Computer1,
+            "2" => PlayerType::Computer1,
+            "h" => PlayerType::Human,
+            _ => return Err(invalid_player),
+        };
+
+        Ok(ConfigPlayers { p1type, p2type })
     }
 }

@@ -1,12 +1,12 @@
-use std::path::PathBuf;
+// use std::path::PathBuf;
 
 use crate::{FitzError, GameOptions};
-mod file_parser;
+mod tile_file_parser;
 
 mod config_loadgame;
 use config_loadgame::ConfigLoad;
 
-mod config_newgame;
+pub mod config_newgame;
 use config_newgame::ConfigNew;
 
 mod config_players;
@@ -14,7 +14,7 @@ use config_players::ConfigPlayers;
 
 #[derive(Debug, PartialEq)]
 pub struct Config {
-    pub tilefile: PathBuf,
+    pub tilefile_contents: Vec<Vec<String>>,
     pub game_option: GameOptions<ConfigNew, ConfigLoad>,
 }
 
@@ -24,12 +24,12 @@ impl Config {
 
         if input.len() == 1 || input.len() == 4 || input.len() == 5 {
             let mut config: Config = Config {
-                tilefile: file_parser::parse_tile_file(&input[0])?,
+                tilefile_contents: tile_file_parser::parse_tile_file(&input[0])?,
                 game_option: GameOptions::View,
             };
 
             // Generate configuration for new or load game
-            if input.len() > 1 && (input[1].len() == 1 && input[2].len() == 1) {
+            if input.len() > 1 {
                 let players: ConfigPlayers = ConfigPlayers::build(&input[1], &input[2])?;
                 // Assign load configuration or else generate configuration for new game
                 if input.len() == 4 {
@@ -44,9 +44,9 @@ impl Config {
             return Ok(config);
         }
 
-        return Err(FitzError {
+        Err(FitzError {
             code: 2,
             message: "Usage: fitz tilefile [p1type p2type [height width | filename]]".to_string(),
-        });
+        })
     }
 }

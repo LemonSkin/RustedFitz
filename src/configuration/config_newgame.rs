@@ -13,11 +13,11 @@ pub struct ConfigNew {
 impl ConfigNew {
     pub fn build(
         players: ConfigPlayers,
-        height: &String,
-        width: &String,
+        height: &str,
+        width: &str,
     ) -> Result<ConfigNew, FitzError> {
         let config_new: ConfigNew = ConfigNew {
-            players: players,
+            players,
             height: height.parse().unwrap(),
             width: width.parse().unwrap(),
         };
@@ -31,6 +31,6 @@ impl ConfigNew {
             });
         }
 
-        return Ok(config_new);
+        Ok(config_new)
     }
 }

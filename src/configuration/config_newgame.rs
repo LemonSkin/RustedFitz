@@ -23,7 +23,7 @@ impl ConfigNew {
         };
 
         // Ensure width and height are in valid range
-        let valid_range: Range<u16> = 1..999;
+        let valid_range: Range<u16> = 1..1000;
         if !valid_range.contains(&config_new.height) || !valid_range.contains(&config_new.width) {
             return Err(FitzError {
                 code: 5,

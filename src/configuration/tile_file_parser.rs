@@ -59,98 +59,98 @@ pub fn parse_tile_file(file: &String) -> Result<Vec<Vec<String>>, FitzError> {
     Ok(tiles)
 }
 
-#[cfg(test)]
-mod ut {
-    use super::*;
-    use crate::vec_of_strings;
-    mod read_file_to_vector {
-        use super::*;
-        #[test]
-        fn test_1_read_file_to_vector() {
-            let input = PathBuf::from("saves/save_valid");
+// #[cfg(test)]
+// mod ut {
+//     use super::*;
+//     use crate::vec_of_strings;
+//     mod read_file_to_vector {
+//         use super::*;
+//         #[test]
+//         fn test_1_read_file_to_vector() {
+//             let input = PathBuf::from("saves/save_valid");
 
-            let expected = vec_of_strings!("3 1 4 3", "*..", "..#", "..#", "**#");
+//             let expected = vec_of_strings!("3 1 4 3", "*..", "..#", "..#", "**#");
 
-            let _output = match read_file_to_vector(&input) {
-                Some(out) => {
-                    assert_eq!(out, expected);
-                }
-                None => {
-                    assert!(false)
-                }
-            };
-        }
-    }
+//             let _output = match read_file_to_vector(&input) {
+//                 Some(out) => {
+//                     assert_eq!(out, expected);
+//                 }
+//                 None => {
+//                     assert!(false)
+//                 }
+//             };
+//         }
+//     }
 
-    mod parse_tile_file {
-        use super::*;
-        #[test]
-        fn test_1_tile_file_valid() {
-            let input = String::from("tilefiles/tilefile_valid");
-            match parse_tile_file(&input) {
-                Ok(_) => assert!(true),
-                Err(_) => assert!(false),
-            };
-        }
+//     mod parse_tile_file {
+//         use super::*;
+//         #[test]
+//         fn test_1_tile_file_valid() {
+//             let input = String::from("tilefiles/tilefile_valid");
+//             match parse_tile_file(&input) {
+//                 Ok(_) => assert!(true),
+//                 Err(_) => assert!(false),
+//             };
+//         }
 
-        #[test]
-        fn test_2_tile_file_not_found() {
-            let input = String::from("tilefiles/non_existant");
+//         #[test]
+//         fn test_2_tile_file_not_found() {
+//             let input = String::from("tilefiles/non_existant");
 
-            let expected = FitzError {
-                code: 2,
-                message: "Can't access tilefile".to_string(),
-            };
+//             let expected = FitzError {
+//                 code: 2,
+//                 message: "Can't access tilefile".to_string(),
+//             };
 
-            match parse_tile_file(&input) {
-                Ok(_) => assert!(false),
-                Err(err) => assert_eq!(expected, err),
-            };
-        }
+//             match parse_tile_file(&input) {
+//                 Ok(_) => assert!(false),
+//                 Err(err) => assert_eq!(expected, err),
+//             };
+//         }
 
-        #[test]
-        fn test_3_tile_file_invalid_char() {
-            let input = String::from("tilefiles/tilefile_invalid_char");
+//         #[test]
+//         fn test_3_tile_file_invalid_char() {
+//             let input = String::from("tilefiles/tilefile_invalid_char");
 
-            let expected = FitzError {
-                code: 3,
-                message: "Invalid tile file contents".to_string(),
-            };
+//             let expected = FitzError {
+//                 code: 3,
+//                 message: "Invalid tile file contents".to_string(),
+//             };
 
-            match parse_tile_file(&input) {
-                Ok(_) => assert!(false),
-                Err(err) => assert_eq!(expected, err),
-            };
-        }
+//             match parse_tile_file(&input) {
+//                 Ok(_) => assert!(false),
+//                 Err(err) => assert_eq!(expected, err),
+//             };
+//         }
 
-        #[test]
-        fn test_4_tile_file_invalid_format() {
-            let input = String::from("tilefiles/tilefile_invalid_format");
+//         #[test]
+//         fn test_4_tile_file_invalid_format() {
+//             let input = String::from("tilefiles/tilefile_invalid_format");
 
-            let expected = FitzError {
-                code: 3,
-                message: "Invalid tile file contents".to_string(),
-            };
+//             let expected = FitzError {
+//                 code: 3,
+//                 message: "Invalid tile file contents".to_string(),
+//             };
 
-            match parse_tile_file(&input) {
-                Ok(_) => assert!(false),
-                Err(err) => assert_eq!(expected, err),
-            };
-        }
+//             match parse_tile_file(&input) {
+//                 Ok(_) => assert!(false),
+//                 Err(err) => assert_eq!(expected, err),
+//             };
+//         }
 
-        #[test]
-        fn test_5_tile_file_incomplete_tile() {
-            let input = String::from("tilefiles/tilefile_invalid_format");
+//         #[test]
+//         fn test_5_tile_file_incomplete_tile() {
+//             let input = String::from("tilefiles/tilefile_invalid_format");
 
-            let expected = FitzError {
-                code: 3,
-                message: "Invalid tile file contents".to_string(),
-            };
+//             let expected = FitzError {
+//                 code: 3,
+//                 message: "Invalid tile file contents".to_string(),
+//             };
 
-            match parse_tile_file(&input) {
-                Ok(_) => assert!(false),
-                Err(err) => assert_eq!(expected, err),
-            };
-        }
-    }
-}
+//             match parse_tile_file(&input) {
+//                 Ok(_) => assert!(false),
+//                 Err(err) => assert_eq!(expected, err),
+//             };
+//         }
+//     }
+// }

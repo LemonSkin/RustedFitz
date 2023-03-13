@@ -4,8 +4,8 @@ use crate::{utils, FitzError};
 #[derive(Debug, PartialEq)]
 pub struct ConfigLoad {
     pub players: ConfigPlayers,
-    pub next_tile_to_play: u8,
-    pub next_player_turn: u8,
+    pub next_tile_to_play: usize,
+    pub next_player_turn: usize,
     pub height: u16,
     pub width: u16,
     pub board: Vec<Vec<char>>,
@@ -25,23 +25,23 @@ impl ConfigLoad {
 
         // Process first line
         let first_line: Vec<String> = lines
-            .iter()
-            .next()
+            .first()
             .unwrap()
             .split_whitespace()
             .map(str::to_string)
             .collect();
+
         if first_line.len() != 4 {
             return Err(save_file_invalid);
         }
 
-        let Ok(next_tile_to_play) = first_line[0].parse::<u8>() else {
+        let Ok(next_tile_to_play) = first_line[0].parse::<usize>() else {
             return Err(save_file_invalid);
         };
         // TODO Validate that next tile to play is valid
 
         // Validate next player turn
-        let Ok(next_player_turn) = first_line[1].parse::<u8>() else {
+        let Ok(next_player_turn) = first_line[1].parse::<usize>() else {
             return Err(save_file_invalid);
         };
         if next_player_turn != 0 && next_player_turn != 1 {

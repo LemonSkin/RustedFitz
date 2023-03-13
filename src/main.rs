@@ -10,7 +10,7 @@ fn main() {
         process::exit(err.code);
     });
 
-    game::run(&config);
+    game::run(config);
 
     // match config.game_option {
     //     GameOptions::View => print_tilefile::print_tilefile(config),

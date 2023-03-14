@@ -9,6 +9,12 @@ use crate::configuration::config_newgame::ConfigNew;
 use crate::configuration::Config;
 use crate::GameOptions;
 
+pub struct PlayerMove {
+    pub offset_y: i16,
+    pub offset_x: i16,
+    pub rotations: u8,
+}
+
 pub fn run(config: Config) {
     let mut game_board: Vec<Vec<char>> = Vec::new();
     let player_chars = ['*', '#'];
@@ -26,23 +32,32 @@ pub fn run(config: Config) {
     };
 
     let mut game_over = false;
+    print_game_board(&game_board);
 
     while !game_over {
-        print_game_board(&game_board);
         // TODO Only print tile if player is human
-        // print_tile(&config.tilefile_contents[next_tile_to_play]);
-        let mut move_valid = false;
+        print_tile(&config.tilefile_contents[next_tile_to_play]);
+        let mut move_valid: bool = false;
         while !move_valid {
             // TODO Add logic to generate computer moves or read from stdin
             // Read user input
             print!("Player {current_player}] ");
-            let player_move = read_user_input();
-            move_valid = move_processor::process_player_move(
-                player_move,
-                &mut game_board,
-                &config.tilefile_contents[next_tile_to_play],
-                &current_player,
-            );
+            // Validate player input
+            if let Some(player_move) = read_user_input() {
+                // Validate player move
+                if let Some(coordinates_to_update) = move_processor::validate_player_move(
+                    player_move,
+                    &game_board,
+                    &config.tilefile_contents[next_tile_to_play],
+                ) {
+                    // Update game board if move is valid
+                    for coordinate in coordinates_to_update {
+                        game_board[coordinate.0][coordinate.1] = current_player;
+                    }
+                    move_valid = true;
+                    print_game_board(&game_board);
+                }
+            }
         }
         // Update next tile to play
         next_tile_to_play += 1;
@@ -50,7 +65,7 @@ pub fn run(config: Config) {
             next_tile_to_play = 0;
         }
 
-        // TODO Determine if game is won
+        // Determine if game is won
         game_over = game_processor::check_game_over(
             &game_board,
             &config.tilefile_contents[next_tile_to_play],
@@ -101,7 +116,7 @@ fn print_tile(tile: &Vec<String>) {
     }
 }
 
-fn read_user_input() -> String {
+fn read_user_input() -> Option<PlayerMove> {
     let mut player_move = String::new();
     let _ = stdout().flush();
     stdin()
@@ -114,5 +129,31 @@ fn read_user_input() -> String {
     if let Some('\r') = player_move.chars().next_back() {
         player_move.pop();
     }
-    player_move
+
+    let vec_move: Vec<String> = player_move.split_whitespace().map(str::to_string).collect();
+    if vec_move.len() != 3 {
+        return None;
+    }
+
+    let Ok(offset_x) = vec_move[1].parse::<i16>() else {
+        return None;
+    };
+
+    let Ok(offset_y) = vec_move[0].parse::<i16>() else {
+        return None;
+    };
+
+    let rotations: u8 = match vec_move[2].as_str() {
+        "0" => 0,
+        "90" => 1,
+        "180" => 2,
+        "270" => 3,
+        _ => return None,
+    };
+
+    Some(PlayerMove {
+        offset_y,
+        offset_x,
+        rotations,
+    })
 }

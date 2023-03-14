@@ -1,21 +1,11 @@
 use crate::game::tile_rotator;
-struct PlayerMove {
-    offset_y: i16,
-    offset_x: i16,
-    rotations: u8,
-}
+use crate::game::PlayerMove;
 
-pub fn process_player_move(
-    player_move: String,
-    game_board: &mut Vec<Vec<char>>,
+pub fn validate_player_move(
+    player_move: PlayerMove,
+    game_board: &Vec<Vec<char>>,
     tile: &Vec<String>,
-    current_player: &char,
-) -> bool {
-    // Generate player move
-    let Some(player_move) = generate_player_move(player_move) else {
-        return false;
-    };
-
+) -> Option<Vec<(usize, usize)>> {
     // Perform given number of tile rotations
     let mut tile = tile.to_owned();
     for _n in 0..player_move.rotations {
@@ -25,6 +15,7 @@ pub fn process_player_move(
     let mut tile_as_chars: Vec<Vec<char>> = Vec::new();
     for row in &tile {
         let row_as_chars = row.chars().collect();
+        // println!("{:?}", row_as_chars);
         tile_as_chars.push(row_as_chars);
     }
 
@@ -37,11 +28,11 @@ pub fn process_player_move(
                 // check top and left sides of game_board (ensure index is not negative in either dimension)
                 let row_index = i16::try_from(y).expect("Failed to convert y coordinate");
                 let Ok(game_board_coordinate_y) = usize::try_from(row_index - 2 + player_move.offset_y) else {
-                    return false;
+                    return None;
                 };
                 let column_index = i16::try_from(x).expect("Failed to convert x coordinate");
                 let Ok(game_board_coordinate_x) = usize::try_from(column_index - 2 + player_move.offset_x) else {
-                    return false
+                    return None;
                 };
                 // Check that game_board coordinates exist on game_board and check if it is empty
                 if game_board_coordinate_x < game_board[0].len()
@@ -52,46 +43,13 @@ pub fn process_player_move(
                 } else {
                     // If a ! will be off the bottom and right sides game_board or
                     // game_board already contains something, the move is invalid
-                    return false;
+                    return None;
                 }
             }
         }
     }
 
-    for coordinate in coordinates_to_update {
-        game_board[coordinate.0][coordinate.1] = *current_player;
-    }
-
-    true
-}
-
-fn generate_player_move(player_move: String) -> Option<PlayerMove> {
-    let vec_move: Vec<String> = player_move.split_whitespace().map(str::to_string).collect();
-    if vec_move.len() != 3 {
-        return None;
-    }
-
-    let Ok(offset_x) = vec_move[1].parse::<i16>() else {
-        return None;
-    };
-
-    let Ok(offset_y) = vec_move[0].parse::<i16>() else {
-        return None;
-    };
-
-    let rotations: u8 = match vec_move[2].as_str() {
-        "0" => 0,
-        "90" => 1,
-        "180" => 2,
-        "270" => 3,
-        _ => return None,
-    };
-
-    Some(PlayerMove {
-        offset_y,
-        offset_x,
-        rotations,
-    })
+    Some(coordinates_to_update)
 }
 
 #[cfg(test)]
@@ -115,7 +73,5 @@ mod unit_test {
             ",,,,,".to_string(),
             ",,,,,".to_string(),
         ];
-
-        process_player_move(player_move, &mut game_board, &tile, &'*');
     }
 }

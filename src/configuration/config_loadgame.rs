@@ -1,9 +1,7 @@
-use crate::configuration::config_players::ConfigPlayers;
 use crate::{utils, FitzError};
 
 #[derive(Debug, PartialEq)]
 pub struct ConfigLoad {
-    pub players: ConfigPlayers,
     pub next_tile_to_play: usize,
     pub next_player_turn: usize,
     pub height: u16,
@@ -12,7 +10,7 @@ pub struct ConfigLoad {
 }
 
 impl ConfigLoad {
-    pub fn build(players: ConfigPlayers, filename: &String) -> Result<ConfigLoad, FitzError> {
+    pub fn build(filename: &String) -> Result<ConfigLoad, FitzError> {
         let Some(lines) = utils::read_file_to_vector(filename) else {
             return Err(FitzError{ code: 6, message: "Can't access save file".to_string()});
         };
@@ -79,7 +77,6 @@ impl ConfigLoad {
         }
 
         Ok(ConfigLoad {
-            players,
             next_tile_to_play,
             next_player_turn,
             height,
@@ -88,93 +85,3 @@ impl ConfigLoad {
         })
     }
 }
-
-// mod parse_save_file {
-//     use super::*;
-//     #[test]
-//     fn test_1_save_file_valid() {
-//         let input = String::from("saves/save_valid");
-
-//         let expected = PathBuf::from(&input);
-
-//         match parse_save_file(&input) {
-//             Ok(_) => assert!(true),
-//             Err(_) => assert!(false),
-//         };
-//     }
-
-//     #[test]
-//     fn test_2_save_file_not_found() {
-//         let input = String::from("saves/non_existant");
-
-//         let expected = FitzError {
-//             code: 6,
-//             message: "Can't access save file".to_string(),
-//         };
-
-//         match parse_save_file(&input) {
-//             Ok(_) => assert!(false),
-//             Err(err) => assert_eq!(expected, err),
-//         };
-//     }
-
-//     #[test]
-//     fn test_3_save_file_invalid_metadata_char() {
-//         let input = String::from("saves/save_invalid_metadata_char");
-
-//         let expected = FitzError {
-//             code: 7,
-//             message: "Invalid save file contents".to_string(),
-//         };
-
-//         match parse_save_file(&input) {
-//             Ok(_) => assert!(false),
-//             Err(err) => assert_eq!(expected, err),
-//         };
-//     }
-
-//     #[test]
-//     fn test_4_save_file_invalid_metadata_dimensions() {
-//         let input = String::from("saves/save_invalid_metadata_dimensions");
-
-//         let expected = FitzError {
-//             code: 7,
-//             message: "Invalid save file contents".to_string(),
-//         };
-
-//         match parse_save_file(&input) {
-//             Ok(_) => assert!(false),
-//             Err(err) => assert_eq!(expected, err),
-//         };
-//     }
-
-//     #[test]
-//     fn test_5_save_file_invalid_board_char() {
-//         let input = String::from("saves/save_invalid_board_char");
-
-//         let expected = FitzError {
-//             code: 7,
-//             message: "Invalid save file contents".to_string(),
-//         };
-
-//         match parse_save_file(&input) {
-//             Ok(_) => assert!(false),
-//             Err(err) => assert_eq!(expected, err),
-//         };
-//     }
-
-//     #[test]
-//     fn test_6_save_file_invalid_board_dimensions() {
-//         let input = String::from("saves/save_invalid_board_dimensions");
-
-//         let expected = FitzError {
-//             code: 7,
-//             message: "Invalid save file contents".to_string(),
-//         };
-
-//         match parse_save_file(&input) {
-//             Ok(_) => assert!(false),
-//             Err(err) => assert_eq!(expected, err),
-//         };
-//     }
-// }

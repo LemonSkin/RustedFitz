@@ -11,9 +11,4 @@ fn main() {
     });
 
     game::run(config);
-
-    // match config.game_option {
-    //     GameOptions::View => print_tilefile::print_tilefile(config),
-    //     _ => game::run(config),
-    // }
 }

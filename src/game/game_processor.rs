@@ -38,7 +38,7 @@ pub fn check_game_over(game_board: &Vec<Vec<char>>, tile: &Vec<String>) -> bool 
                 };
                 // If any valid move exists, continue the game
                 if let Some(_valid_move) =
-                    move_processor::validate_player_move(player_move, game_board, tile)
+                    move_processor::validate_move(&player_move, game_board, tile)
                 {
                     return false;
                 }

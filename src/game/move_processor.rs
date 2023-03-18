@@ -1,8 +1,8 @@
 use crate::game::tile_rotator;
 use crate::game::PlayerMove;
 
-pub fn validate_player_move(
-    player_move: PlayerMove,
+pub fn validate_move(
+    player_move: &PlayerMove,
     game_board: &Vec<Vec<char>>,
     tile: &Vec<String>,
 ) -> Option<Vec<(usize, usize)>> {

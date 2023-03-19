@@ -93,7 +93,13 @@ pub fn run(config: Config) {
                     &config.tilefile_contents[next_tile_to_play],
                 );
             }
-            PlayerType::Computer2 => println!("Computer 2 turn..."),
+            PlayerType::Computer2 => {
+                coordinates_to_update = cpu_players::cpu2(
+                    players[current_player],
+                    &game_board,
+                    &config.tilefile_contents[next_tile_to_play],
+                );
+            }
         }
 
         // Coordinates should never be empty at this point
